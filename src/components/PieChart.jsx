@@ -1,14 +1,52 @@
+import React, { useState, useEffect } from "react";
 import { ResponsivePie } from "@nivo/pie";
-import { tokens } from "../theme";
 import { useTheme } from "@mui/material";
-import { mockPieData as data } from "../data/mockData";
+import { tokens } from "../theme";
 
 const PieChart = () => {
+  const [pieData, setPieData] = useState([]);
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
+
+  // Fetch data from Spring backend
+  useEffect(() => {
+    const fetchPieData = async () => {
+      try {
+        const response = await fetch("http://localhost:8089/api/claims/count");
+        const data = await response.json();
+
+        // Map the backend data to match the pie chart format
+        setPieData([
+          {
+            id: "onHold",
+            label: "On Hold",
+            value: data.onHold,
+            color: "hsl(104, 70%, 50%)",
+          },
+          {
+            id: "Accepted",
+            label: "Accepted",
+            value: data.accepted,
+            color: "hsl(291, 70%, 50%)",
+          },
+          {
+            id: "notAccepted",
+            label: "Not Accepted",
+            value: data.notAccepted,
+            color: "hsl(229, 70%, 50%)",
+          },
+        ]);
+      } catch (error) {
+        console.error("Error fetching pie chart data:", error);
+      }
+    };
+
+    fetchPieData();
+  }, []);
+
   return (
     <ResponsivePie
-      data={data}
+      data={pieData}
       theme={{
         axis: {
           domain: {

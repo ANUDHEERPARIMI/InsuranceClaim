@@ -5,6 +5,7 @@ import Team from "./team";
 import Invoices from "./invoices";
 import Form from "./form";
 import Pie from "./pie";
+import LoginPage from "./login";
 
 export {
   Navbar,
@@ -14,4 +15,5 @@ export {
   Invoices,
   Form,
   Pie,
+  LoginPage
 };

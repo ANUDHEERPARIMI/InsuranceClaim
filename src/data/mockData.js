@@ -541,21 +541,15 @@ export const mockPieData = [
     color: "hsl(104, 70%, 50%)",
   },
   {
-    id: "make",
-    label: "make",
-    value: 170,
-    color: "hsl(162, 70%, 50%)",
-  },
-  {
     id: "go",
     label: "go",
-    value: 322,
+    value: 300,
     color: "hsl(291, 70%, 50%)",
   },
   {
     id: "lisp",
     label: "lisp",
-    value: 503,
+    value: 2,
     color: "hsl(229, 70%, 50%)",
   },
   {

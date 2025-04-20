@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import { Avatar, Box, IconButton, Typography, useTheme } from "@mui/material";
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import { tokens } from "../../../theme";
 import { Menu, MenuItem, Sidebar } from "react-pro-sidebar";
 import {
@@ -20,6 +20,19 @@ const SideBar = () => {
   const { toggled, setToggled } = useContext(ToggledContext);
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
+
+  const id = localStorage.getItem("id");
+  const username = localStorage.getItem("username");
+  const isManager = JSON.parse(localStorage.getItem("isManager")); 
+  useEffect(() => {
+    const handleStorageChange = () => {
+      setIsManager(localStorage.getItem("userRole") === "Manager");
+    };
+
+    window.addEventListener("storage", handleStorageChange);
+    return () => window.removeEventListener("storage", handleStorageChange);
+  }, []);
+
   return (
     <Sidebar
       backgroundColor={colors.primary[400]}
@@ -60,7 +73,7 @@ const SideBar = () => {
                 <img
                   style={{ width: "30px", height: "30px", borderRadius: "8px" }}
                   src={logo}
-                  alt="Argon"
+                  alt="Evernorth"
                 />
                 <Typography
                   variant="h4"
@@ -95,14 +108,14 @@ const SideBar = () => {
           />
           <Box sx={{ textAlign: "center" }}>
             <Typography variant="h3" fontWeight="bold" color={colors.gray[100]}>
-              Tony Stark
+              {username}
             </Typography>
             <Typography
               variant="h6"
               fontWeight="500"
               color={colors.greenAccent[500]}
             >
-              Manager
+              {isManager ? "Manager" : "Employee"}
             </Typography>
           </Box>
         </Box>
@@ -120,19 +133,13 @@ const SideBar = () => {
             },
           }}
         >
-          <Item
-            title="Dashboard"
-            path="/"
-            colors={colors}
-            icon={<DashboardOutlined />}
-          />
         </Menu>
         <Typography
           variant="h6"
           color={colors.gray[300]}
           sx={{ m: "15px 0 5px 20px" }}
         >
-          {!collapsed ? "Data" : " "}
+          {!collapsed && isManager ? "Approval" : " "}
         </Typography>{" "}
         <Menu
           menuItemStyles={{
@@ -145,31 +152,21 @@ const SideBar = () => {
             },
           }}
         >
-          <Item
-            title="Manage Team"
-            path="/team"
-            colors={colors}
-            icon={<PeopleAltOutlined />}
-          />
-          {/*<Item
-            title="Contacts Information"
-            path="/contacts"
-            colors={colors}
-            icon={<ContactsOutlined />}
-          />*/}
-          {/*<Item
-            title="Invoices Balances"
-            path="/invoices"
-            colors={colors}
-            icon={<ReceiptOutlined />}
-          />*/}
+          {isManager && (
+            <Item
+              title="Manage Team"
+              path={`/app/${id}/team`}
+              colors={colors}
+              icon={<PeopleAltOutlined />}
+            />
+          )}
         </Menu>
         <Typography
           variant="h6"
           color={colors.gray[300]}
           sx={{ m: "15px 0 5px 20px" }}
         >
-          {!collapsed ? "Pages" : " "}
+          {!collapsed ? "Personal Info" : " "}
         </Typography>
         <Menu
           menuItemStyles={{
@@ -183,30 +180,19 @@ const SideBar = () => {
           }}
         >
           <Item
-            title="Profile Form"
-            path="/form"
+            title="Personal Info"
+            path={`/app/${id}/dashboard`}
             colors={colors}
             icon={<PersonOutlined />}
           />
-          {/*<Item
-            title="Calendar"
-            path="/calendar"
-            colors={colors}
-            icon={<CalendarTodayOutlined />}
-          />*/}
-          {/*<Item
-            title="FAQ Page"
-            path="/faq"
-            colors={colors}
-            icon={<HelpOutlineOutlined />}
-          />*/}
         </Menu>
+        
         <Typography
           variant="h6"
           color={colors.gray[300]}
           sx={{ m: "15px 0 5px 20px" }}
         >
-          {!collapsed ? "Charts" : " "}
+          {!collapsed ? "Insurance" : " "}
         </Typography>
         <Menu
           menuItemStyles={{
@@ -219,36 +205,39 @@ const SideBar = () => {
             },
           }}
         >
-          {/*<Item
-            title="Bar Chart"
-            path="/bar"
-            colors={colors}
-            icon={<BarChartOutlined />}
-          />*/}
           <Item
-            title="Pie Chart"
-            path="/pie"
+            title="Insurance Claim"
+            path={`/app/${id}/form`}
             colors={colors}
-            icon={<DonutLargeOutlined />}
+            icon={<PersonOutlined />}
           />
-          {/*<Item
-            title="Line Chart"
-            path="/line"
-            colors={colors}
-            icon={<TimelineOutlined />}
-          />
-          <Item
-            title="Geography Chart"
-            path="/geography"
-            colors={colors}
-            icon={<MapOutlined />}
-          />
-          <Item
-            title="Stream Chart"
-            path="/stream"
-            colors={colors}
-            icon={<WavesOutlined />}
-          />*/}
+        </Menu>
+        <Typography
+          variant="h6"
+          color={colors.gray[300]}
+          sx={{ m: "15px 0 5px 20px" }}
+        >
+          {!collapsed && isManager ? "Charts" : " "}
+        </Typography>
+        <Menu
+          menuItemStyles={{
+            button: {
+              ":hover": {
+                color: "#868dfb",
+                background: "transparent",
+                transition: ".4s ease",
+              },
+            },
+          }}
+        >
+          {isManager && (
+            <Item
+              title="Pie Chart"
+              path={`/app/${id}/pie`}
+              colors={colors}
+              icon={<DonutLargeOutlined />}
+            />
+          )}  
         </Menu>
       </Box>
     </Sidebar>
